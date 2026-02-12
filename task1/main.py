@@ -1,9 +1,10 @@
 import subprocess
 import re
+
 import pandas as pd
 
 
-dom = [
+domains = [
     'google.com',
     'cloudflare.com',
     'wikipedia.org',
@@ -13,24 +14,31 @@ dom = [
     'openai.com',
     'stackoverflow.com',
     'reddit.com',
-    'spotify.com' ]
-RTT = []
-IP = []
-ICMP = []
-TTL = []
+    'spotify.com'
+]
+rtt = []
+ip = []
+icmp = []
+ttl = []
 
 
-for d in dom:
-    inf = subprocess.run(['ping', '-c', '1', d], capture_output=True, text=True)
+for domain in domains:
+    inf = subprocess.run(['ping', '-c', '1', domain], capture_output=True, text=True)
     out = inf.stdout
-    rtt = re.findall(r"time\S+", out)[0][5:] if inf.returncode == 0 else 'None'
-    ip = re.findall(r"from \S+", out)[0][5:-1] if inf.returncode == 0 else 'None'
-    icmp = re.findall(r"icmp_seq=\S+", out)[0][9:] if inf.returncode == 0 else 'None'
-    ttl = re.findall(r"ttl=\S+", out)[0][4:] if inf.returncode == 0 else 'None'
-    RTT.append(rtt)
-    IP.append(ip)
-    ICMP.append(icmp)
-    TTL.append(ttl)
+    rtt_val = re.findall(r"time\S+", out)[0][5:] if inf.returncode == 0 else 'None'
+    ip_val = re.findall(r"from \S+", out)[0][5:-1] if inf.returncode == 0 else 'None'
+    icmp_val = re.findall(r"icmp_seq=\S+", out)[0][9:] if inf.returncode == 0 else 'None'
+    ttl_val = re.findall(r"ttl=\S+", out)[0][4:] if inf.returncode == 0 else 'None'
+    rtt.append(rtt)
+    ip.append(ip)
+    icmp.append(icmp)
+    ttl.append(ttl)
 
-df = pd.DataFrame({"domen": dom, "IP": IP, "RTT": RTT, "ICMP_SEQ": ICMP, "TTL": TTL})
+df = pd.DataFrame({
+    "domen": domains, 
+    "IP": ip, 
+    "RTT": rtt, 
+    "ICMP_SEQ": icmp, 
+    "TTL": ttl
+})
 df.to_csv("result.csv", index=False)
