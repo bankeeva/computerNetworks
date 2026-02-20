@@ -31,8 +31,8 @@ with sync_playwright() as p:
         
         articles = page.locator("article")
 
-        for i in range(3):
-            article = articles.nth(i)
+        for article_index in range(3):
+            article = articles.nth(article_index)
 
             title_link = article.locator("h2 a").first
             title = (title_link.inner_text() or "None").strip()
@@ -47,7 +47,8 @@ with sync_playwright() as p:
                 dt_obj = datetime.fromisoformat(dt)
                 normal_dt = dt_obj.strftime("%d.%m.%Y %H:%M")
 
-            views_link = article.locator("span.tm-icon-counter__value, span.tm-icon-counter_value").first
+            views_link = article.locator(
+                "span.tm-icon-counter__value, span.tm-icon-counter_value").first
             views = (views_link.inner_text() or "None").strip()
 
             rows.append({
