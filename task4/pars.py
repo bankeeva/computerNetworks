@@ -12,16 +12,12 @@ async def parse_url_to_df(url):
         page = await browser.new_page()
 
         for page_num in range(1, 4):
-            p_url = url + f"page{page_num}/"
-            await page.goto(p_url, wait_until="domcontentloaded")
+            page_url = url + f"page{page_num}/"
+            await page.goto(page_url, wait_until="domcontentloaded")
             
             articles = page.locator("article")
-            collected = 0
 
             for article_index in range(3):
-                if collected == 3:
-                    break
-
                 article = articles.nth(article_index)
 
                 try:
@@ -33,6 +29,7 @@ async def parse_url_to_df(url):
 
                     time_link = article.locator("time").first
                     dt = ((await time_link.get_attribute("datetime")) or "None").strip()
+                    normal_dt = "None"
                     if dt != "None":
                         dt = dt.replace("Z", "+00:00")
                         dt_obj = datetime.fromisoformat(dt)
@@ -51,7 +48,6 @@ async def parse_url_to_df(url):
                         "datetime": normal_dt,
                         "views": views
                     })
-                    collected += 1
 
                 except Exception:
                     continue

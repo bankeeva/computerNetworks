@@ -11,9 +11,8 @@ def to_sql(data_frame, connection=None, cursor=None):
             database="1"
         )
         cursor = connection.cursor()
-
-        # cursor.execute('TRUNCATE TABLE habr_pars RESTART IDENTITY;')
-        cursor.execute(f"""
+        
+        cursor.execute("""
         CREATE TABLE IF NOT EXISTS habr_pars (
             id SERIAL PRIMARY KEY,
             title TEXT,
@@ -67,12 +66,12 @@ def from_sql(connection=None, cursor=None):
         rows = cursor.fetchall()
 
         return [{
-            "id": r[0],
-            "title": r[1],
-            "author": r[2],
-            "datetime": r[3],
-            "views": r[4]
-        } for r in rows]
+            "id": row[0],
+            "title": row[1],
+            "author": row[2],
+            "datetime": row[3],
+            "views": row[4]
+        } for row in rows]
 
     except Exception as error:
         print("Ошибка при подключении к PostgreSQL", error)

@@ -30,12 +30,8 @@ with sync_playwright() as p:
         page.goto(url, wait_until="domcontentloaded")
         
         articles = page.locator("article")
-        collected = 0
 
         for article_index in range(3):
-            if collected == 3:
-                    break
-            
             article = articles.nth(article_index)
 
             try:
@@ -47,6 +43,7 @@ with sync_playwright() as p:
 
                 time_link = article.locator("time").first
                 dt = (time_link.get_attribute("datetime") or "None").strip()
+                normal_dt = "None"
                 if dt != "None":
                     dt = dt.replace("Z", "+00:00")
                     dt_obj = datetime.fromisoformat(dt)
@@ -65,7 +62,6 @@ with sync_playwright() as p:
                     "datetime": normal_dt,
                     "views": views
                 })
-                collected += 1
             except Exception:
                     continue
 

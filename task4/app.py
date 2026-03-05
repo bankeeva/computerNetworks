@@ -1,7 +1,7 @@
 import json
-from fastapi.responses import JSONResponse
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 from task4.pars import parse_url_to_df
 from task4.bd import to_sql, from_sql
