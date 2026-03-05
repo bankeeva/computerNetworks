@@ -14,7 +14,7 @@ async def parse(url="https://habr.com/ru/feed/"):
     try:
         df = await parse_url_to_df(url)
         to_sql(df)
-        return {"message": "Данные записаны в БД"}
+        return {"message": "The data is recorded in the DB"}
     except Exception as error:
         print(error)
 
