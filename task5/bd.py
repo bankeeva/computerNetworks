@@ -12,7 +12,7 @@ def to_sql(data_frame, connection=None, cursor=None):
         ) as connection:
             with connection.cursor() as cursor:
                 cursor.execute("""
-                CREATE TABLE IF NOT EXISTS habr_pars (
+                    CREATE TABLE IF NOT EXISTS habr_pars (
                     id SERIAL PRIMARY KEY,
                     title TEXT,
                     author TEXT,
@@ -21,20 +21,20 @@ def to_sql(data_frame, connection=None, cursor=None):
                 );
                 """)
 
-            if data_frame is None or data_frame.empty:
-                connection.commit()
-                return 0
+                if data_frame is None or data_frame.empty:
+                    connection.commit()
+                    return 0
 
-            data = data_frame[["title", "author", "datetime", "views"]].copy()
+                data = data_frame[["title", "author", "datetime", "views"]].copy()
 
-            for _, row in data.iterrows():
-                cursor.execute(
-                    f"""
-                    INSERT INTO habr_pars (title, author, datetime, views)
-                    VALUES (%s, %s, %s, %s)
-                    """,
-                    (row["title"], row["author"], row["datetime"], row["views"])
-                )
+                for _, row in data.iterrows():
+                    cursor.execute(
+                        f"""
+                        INSERT INTO habr_pars (title, author, datetime, views)
+                        VALUES (%s, %s, %s, %s)
+                        """,
+                        (row["title"], row["author"], row["datetime"], row["views"])
+                    )
 
     except Exception as error:
         print("Ошибка при подключении к PostgreSQL", error)
